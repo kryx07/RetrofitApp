@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.example.sda.retrofitapp.model.CallActivity;
 import com.example.sda.retrofitapp.model.LoginResponse;
+import com.example.sda.retrofitapp.model.activity.Activities;
+import com.example.sda.retrofitapp.model.activity.ModelActivity;
 import com.example.sda.retrofitapp.network.ApiClient;
 import com.example.sda.retrofitapp.network.ApiService;
 import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
@@ -70,20 +72,25 @@ public class MainActivity extends AppCompatActivity {
     private void getActivities() {
 
         api.getActivities()
-                .enqueue(new Callback<List<CallActivity>>() {
+                .enqueue(new Callback<List<ModelActivity>>() {
                     @Override
-                    public void onResponse(Call<List<CallActivity>> call, Response<List<CallActivity>> response) {
+                    public void onResponse(Call<List<ModelActivity>> call, Response<List<ModelActivity>> response) {
                         if (response.isSuccessful()) {
-                            Log.e("Activities: ", response.body().toString());
+                            Activities activities = new Activities(response.body());
+                            Log.e("Activities: ", activities.toString());
                         } else {
+                            Log.e("Response unsuccessful: ", "There was a problem with your getting activities");
 
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<List<CallActivity>> call, Throwable t) {
-
+                    public void onFailure(Call<List<ModelActivity>> call, Throwable t) {
+                        Log.e("Response Failure: ", "There was a failure getting activities",t);
+                        Log.e("Response Failure: ", t.getStackTrace().toString());
                     }
+
+
                 });
     }
 
@@ -130,5 +137,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
 }

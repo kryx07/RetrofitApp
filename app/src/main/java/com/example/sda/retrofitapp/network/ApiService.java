@@ -2,6 +2,7 @@ package com.example.sda.retrofitapp.network;
 
 import com.example.sda.retrofitapp.model.CallActivity;
 import com.example.sda.retrofitapp.model.LoginResponse;
+import com.example.sda.retrofitapp.model.activity.Activities;
 import com.example.sda.retrofitapp.model.activity.ModelActivity;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public interface ApiService {
 
     @GET("Activities/Get")
 
-    Call<List<CallActivity>> getActivities();
+    Call<List<ModelActivity>> getActivities();
 
     @FormUrlEncoded
     @POST("Account/Login")

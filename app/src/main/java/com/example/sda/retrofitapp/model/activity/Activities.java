@@ -13,13 +13,13 @@ import java.util.List;
 public class Activities {
 
     @SerializedName("Activities")
-    private List<Activity> activities;
+    private List<ModelActivity> activities;
 
-    public List<Activity> getActivities() {
+    public List<ModelActivity> getActivities() {
         return activities;
     }
 
-    public void setActivities(List<Activity> activities) {
+    public Activities(List<ModelActivity> activities) {
         this.activities = activities;
     }
 

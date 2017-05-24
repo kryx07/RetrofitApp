@@ -9,13 +9,13 @@ public class ModelActivity {
     @SerializedName("Incoming")
     private boolean incoming;
     @SerializedName("ActivityType")
-    private ActivityType activityType;
+    private int activityType;
     @SerializedName("Note")
     private String note;
     @SerializedName("NoteTitle")
     private String noteTitle;
     @SerializedName("Status")
-    private Status status;
+    private int status;
 
     public String getPhoneNo() {
         return phoneNo;
@@ -33,11 +33,11 @@ public class ModelActivity {
         this.incoming = incoming;
     }
 
-    public ActivityType getActivityType() {
+    public int getActivityType() {
         return activityType;
     }
 
-    public void setActivityType(ActivityType activityType) {
+    public void setActivityType(int activityType) {
         this.activityType = activityType;
     }
 
@@ -55,6 +55,14 @@ public class ModelActivity {
 
     public void setNoteTitle(String noteTitle) {
         this.noteTitle = noteTitle;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     @Override
