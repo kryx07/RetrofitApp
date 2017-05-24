@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:text="matysiatko@gmail.com"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
         android:hint="@string/edit_email"
         android:inputType="textEmailAddress" />
 
@@ -22,6 +22,7 @@
         android:hint="@string/edit_password"
         android:inputType="textPassword" />
 
+
     <Button
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
         android:layout_below="@id/password"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/button_get_activities" />
+        android:text="@string/button_submit" />
 
     <Button
         android:id="@+id/get_activity_button"
@@ -38,7 +39,8 @@
         android:layout_below="@id/submit_button"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/button_submit" />
+        android:text="@string/button_get_activities" />
+
 
 
 </RelativeLayout>

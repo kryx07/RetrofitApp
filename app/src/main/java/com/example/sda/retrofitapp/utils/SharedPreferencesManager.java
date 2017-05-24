@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.sda.retrofitapp.MyApplication;
 import com.example.sda.retrofitapp.R;
 
 /**
@@ -17,8 +18,8 @@ public class SharedPreferencesManager {
     private SharedPreferences.Editor editor;
     private SharedPreferences sharedPreferences;
 
-    public SharedPreferencesManager(Context context) {
-        this.context = context;
+    public SharedPreferencesManager() {
+        this.context = MyApplication.getApplicationUsingReflection();
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_prefs), Context.MODE_PRIVATE);
         editor = context.getSharedPreferences(context.getString(R.string.shared_prefs), 0).edit();
     }
