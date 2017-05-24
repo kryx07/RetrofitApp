@@ -4,6 +4,7 @@
     <string name="button_submit">Submit</string>
     <string name="edit_email">E-mail</string>
     <string name="edit_password">Password</string>
-    <string name="saved_access_token">Saved Access Token</string>
+    <string name="shared_prefs">com.example.sda.retrofitapp.sharedprefs</string>
+    <string name="token_key">Token Key</string>
     <string name="no_token">There is no token</string>
 </resources>
