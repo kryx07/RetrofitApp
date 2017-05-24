@@ -7,4 +7,6 @@
     <string name="shared_prefs">com.example.sda.retrofitapp.sharedprefs</string>
     <string name="token_key">Token Key</string>
     <string name="no_token">There is no token</string>
+    <string name="toast_login_error">Connection Error</string>
+    <string name="button_get_activities">Get Activities</string>
 </resources>
