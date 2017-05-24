@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        sharedPreferencesManager = new SharedPreferencesManager(this);
+        sharedPreferencesManager = new SharedPreferencesManager();
         api = ApiClient.getApiClient();
 
         editMail = (EditText) findViewById(R.id.email);
         editPassword = (EditText) findViewById(R.id.password);
         submitButton = (Button) findViewById(R.id.submit_button);
-        getActivitiesButton = (Button) findViewById(R.id.submit_button);
+        getActivitiesButton = (Button) findViewById(R.id.get_activity_button);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,7 @@
 package com.example.sda.retrofitapp.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.example.sda.retrofitapp.BuildConfig;
 import com.example.sda.retrofitapp.MainActivity;
@@ -26,11 +27,27 @@ public class ApiClient {
 
     private static Retrofit retrofit;
 
-    private SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager();
 
     private static Retrofit createRetrofit() {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager();
+
+
+        clientBuilder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(@NonNull Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .header("Authorization", "Bearer " + sharedPreferencesManager.readAccessToken()); // <-- this is the important line
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
 
 
         if (BuildConfig.DEBUG) {
