@@ -2,29 +2,27 @@ package com.example.sda.retrofitapp.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
-/**
- * Created by sda on 23.05.17.
- */
-
 public class CallActivity {
 
     @SerializedName("PhoneNo")
-    private String phoneNumber;
+    private String phoneNo;
     @SerializedName("Incoming")
     private boolean incoming;
-    @SerializedName("Start")
-    private Date dateStart;
-    @SerializedName("End")
-    private Date dateEnd;
+    @SerializedName("ActivityType")
+    private int activityType;
+    @SerializedName("Note")
+    private String note;
+    @SerializedName("NoteTitle")
+    private String noteTitle;
+    @SerializedName("Status")
+    private int status;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     public boolean isIncoming() {
@@ -35,19 +33,47 @@ public class CallActivity {
         this.incoming = incoming;
     }
 
-    public Date getDateStart() {
-        return dateStart;
+    public int getActivityType() {
+        return activityType;
     }
 
-    public void setDateStart(Date dateStart) {
-        this.dateStart = dateStart;
+    public void setActivityType(int activityType) {
+        this.activityType = activityType;
     }
 
-    public Date getDateEnd() {
-        return dateEnd;
+    public String getNote() {
+        return note;
     }
 
-    public void setDateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getNoteTitle() {
+        return noteTitle;
+    }
+
+    public void setNoteTitle(String noteTitle) {
+        this.noteTitle = noteTitle;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "CallActivity{" +
+                "phoneNo='" + phoneNo + '\'' +
+                ", incoming=" + incoming +
+                ", activityType=" + activityType +
+                ", note='" + note + '\'' +
+                ", noteTitle='" + noteTitle + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

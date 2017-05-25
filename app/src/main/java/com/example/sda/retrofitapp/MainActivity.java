@@ -2,19 +2,17 @@ package com.example.sda.retrofitapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.sda.retrofitapp.model.CallActivity;
-import com.example.sda.retrofitapp.model.LoginResponse;
-import com.example.sda.retrofitapp.model.activity.Activities;
-import com.example.sda.retrofitapp.model.activity.ModelActivity;
+import com.example.sda.retrofitapp.model.Client;
 import com.example.sda.retrofitapp.network.ApiClient;
 import com.example.sda.retrofitapp.network.ApiService;
-import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
 
 import java.util.List;
 
@@ -22,15 +20,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by wd42 on 25.05.17.
+ */
+
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editMail;
-    private EditText editPassword;
-    private Button submitButton;
     private Button getActivitiesButton;
+    private Button getClientsButton;
     private ApiService api;
 
-    private SharedPreferencesManager sharedPreferencesManager;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,45 +40,42 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
     private void init() {
-        sharedPreferencesManager = new SharedPreferencesManager();
-        api = ApiClient.getApiClient();
+        api = ApiClient.getService();
 
-        editMail = (EditText) findViewById(R.id.email);
-        editPassword = (EditText) findViewById(R.id.password);
-        submitButton = (Button) findViewById(R.id.submit_button);
         getActivitiesButton = (Button) findViewById(R.id.get_activity_button);
+        //recyclerListener = (AbsListView.RecyclerListener) findViewById(R.id.activity_list);
+        getClientsButton = (Button) findViewById(R.id.get_clients_button);
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login(editMail.getText().toString(), editPassword.getText().toString());
-            }
-        });
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
         getActivitiesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivities();
             }
         });
+        getClientsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getClients();
+            }
+        });
 
     }
+
 
     private void getActivities() {
 
         api.getActivities()
-                .enqueue(new Callback<List<ModelActivity>>() {
+                .enqueue(new Callback<List<CallActivity>>() {
                     @Override
-                    public void onResponse(Call<List<ModelActivity>> call, Response<List<ModelActivity>> response) {
+                    public void onResponse(Call<List<CallActivity>> call, Response<List<CallActivity>> response) {
                         if (response.isSuccessful()) {
-                            Activities activities = new Activities(response.body());
-                            Log.e("Activities: ", activities.toString());
+                            List<CallActivity> callActivities = response.body();
+                            Log.e("CallActivities: ", callActivities.toString());
                         } else {
                             Log.e("Response unsuccessful: ", "There was a problem with your getting activities");
 
@@ -85,58 +83,35 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<List<ModelActivity>> call, Throwable t) {
-                        Log.e("Response Failure: ", "There was a failure getting activities",t);
+                    public void onFailure(Call<List<CallActivity>> call, Throwable t) {
+                        Log.e("Response Failure: ", "There was a failure getting activities", t);
                         Log.e("Response Failure: ", t.getStackTrace().toString());
                     }
-
-
                 });
+
     }
 
-    /*private void getCalls() {
-        api.getActivities().enqueue(new Callback<List<CallActivity>>() {
+    private void getClients() {
+
+        api.getClients().enqueue(new Callback<List<Client>>() {
             @Override
-            public void onResponse(Call<List<CallActivity>> call, Response<List<CallActivity>> response) {
+            public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                 if (response.isSuccessful()) {
-                    List<CallActivity> activities = response.body();
-                } else {
-                    // TODO: 23.05.17 Handle error
+                    List<Client> callActivities = response.body();
+                    Log.e("Clients: ", callActivities.toString());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<CallActivity>> call, Throwable t) {
-                // TODO: 23.05.17 Handle failure: connection
+            public void onFailure(Call<List<Client>> call, Throwable t) {
+                Log.e("Response Failure: ", "There was a failure getting activities", t);
+                Log.e("Response Failure: ", t.getStackTrace().toString());
             }
         });
-    }*/
 
-    private void login(String email, String password) {
-        api.login(email, password)
-                .enqueue(new Callback<LoginResponse>() {
-                    @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                        if (response.isSuccessful()) {
-                            String accessToken = response.body().getAccessToken();
-                            Log.e("Access token", accessToken);
-                            sharedPreferencesManager.writeAccessToken(accessToken);
-                            Log.e("Read access token", sharedPreferencesManager.readAccessToken());
 
-                        } else {
-                            Log.e("Access token", "Login error");
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        // TODO: 24.05.17 Handle failure
-                        Log.e("Login Error", "Something's wrong with loging in!");
-                        Toast.makeText(getApplicationContext(), getString(R.string.toast_login_error), Toast.LENGTH_LONG).show();
-                    }
-                });
     }
+
 
 
 }

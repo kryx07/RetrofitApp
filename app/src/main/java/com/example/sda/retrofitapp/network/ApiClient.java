@@ -1,10 +1,8 @@
 package com.example.sda.retrofitapp.network;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.example.sda.retrofitapp.BuildConfig;
-import com.example.sda.retrofitapp.MainActivity;
 import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
 
 import java.io.IOException;
@@ -23,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://cbm.aype.pl/CBM_API_NEW/api/";
+    private static final String BASE_URL = "http://cbm.aype.pl/CBM_API/api/";
 
     private static Retrofit retrofit;
 
@@ -34,12 +32,10 @@ public class ApiClient {
 
         final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager();
 
-
         clientBuilder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(@NonNull Interceptor.Chain chain) throws IOException {
                 Request original = chain.request();
-
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .header("Authorization", "Bearer " + sharedPreferencesManager.readAccessToken()); // <-- this is the important line
@@ -48,7 +44,6 @@ public class ApiClient {
                 return chain.proceed(request);
             }
         });
-
 
         if (BuildConfig.DEBUG) {
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -64,7 +59,7 @@ public class ApiClient {
                 .build();
     }
 
-    public static ApiService getApiClient() {
+    public static ApiService getService() {
         if (retrofit == null) {
             retrofit = createRetrofit();
         }

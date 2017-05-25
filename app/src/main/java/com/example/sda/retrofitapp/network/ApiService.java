@@ -1,9 +1,8 @@
 package com.example.sda.retrofitapp.network;
 
-import com.example.sda.retrofitapp.model.CallActivity;
+import com.example.sda.retrofitapp.model.Client;
 import com.example.sda.retrofitapp.model.LoginResponse;
-import com.example.sda.retrofitapp.model.activity.Activities;
-import com.example.sda.retrofitapp.model.activity.ModelActivity;
+import com.example.sda.retrofitapp.model.CallActivity;
 
 import java.util.List;
 
@@ -11,7 +10,6 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 /**
@@ -21,8 +19,10 @@ import retrofit2.http.POST;
 public interface ApiService {
 
     @GET("Activities/Get")
+    Call<List<CallActivity>> getActivities();
 
-    Call<List<ModelActivity>> getActivities();
+    @GET("Clients/Get")
+    Call<List<Client>> getClients();
 
     @FormUrlEncoded
     @POST("Account/Login")

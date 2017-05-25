@@ -9,4 +9,6 @@
     <string name="no_token">There is no token</string>
     <string name="toast_login_error">Connection Error</string>
     <string name="button_get_activities">Get Activities</string>
+    <string name="toast_request_error">There was a problem getting your request</string>
+    <string name="button_get_clients">Get Clients</string>
 </resources>
