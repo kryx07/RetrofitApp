@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,20 +11,26 @@ import android.widget.Toast;
 import com.example.sda.retrofitapp.model.LoginResponse;
 import com.example.sda.retrofitapp.network.ApiClient;
 import com.example.sda.retrofitapp.network.ApiService;
+import com.example.sda.retrofitapp.ui.clients.ClientsActivity;
 import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editMail;
-    private EditText editPassword;
-    private Button submitButton;
+    @BindView(R.id.email_text)
+    EditText editMail;
+    @BindView(R.id.password_text)
+    EditText editPassword;
+    @BindView(R.id.submit_button)
+    Button submitButton;
 
     private ApiService apiService;
-    private ApiClient apiClient;
 
     private SharedPreferencesManager sharedPreferencesManager;
 
@@ -33,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         init();
     }
 
@@ -42,23 +48,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.submit_button)
+    public void onSubmitClick(){
+        login(editMail.getText().toString(), editPassword.getText().toString());
+    }
+
     private void init() {
         sharedPreferencesManager = new SharedPreferencesManager();
-        apiClient = new ApiClient(sharedPreferencesManager);
-        apiService = apiClient.getApiService();
-
-
-        editMail = (EditText) findViewById(R.id.email);
-        editPassword = (EditText) findViewById(R.id.password);
-        submitButton = (Button) findViewById(R.id.submit_button);
-
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login(editMail.getText().toString(), editPassword.getText().toString());
-            }
-        });
+        apiService = new ApiClient(sharedPreferencesManager).getApiService();
     }
 
     private void login(String email, String password) {
@@ -93,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void openMainActivity() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ClientsActivity.class);
         //intent.putExtra("dupa");
         startActivity(intent);
         finish();

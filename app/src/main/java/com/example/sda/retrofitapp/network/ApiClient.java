@@ -23,19 +23,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     private static final String BASE_URL = "http://cbm.aype.pl/CBM_API/api/";
+    private ApiService apiService;
 
-    private Retrofit retrofit;
-    private  ApiService apiService;
-
-    public ApiClient(SharedPreferencesManager sharedPreferencesManager){
+    public ApiClient(SharedPreferencesManager sharedPreferencesManager) {
         createRetrofit(sharedPreferencesManager);
     }
 
-    public ApiService getApiService(){
+    public ApiService getApiService() {
         return apiService;
     }
 
-    private  void createRetrofit(final SharedPreferencesManager sharedPreferencesManager) {
+    private void createRetrofit(final SharedPreferencesManager sharedPreferencesManager) {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 

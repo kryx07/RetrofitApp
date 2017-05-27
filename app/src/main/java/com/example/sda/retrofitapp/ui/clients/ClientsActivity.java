@@ -1,13 +1,16 @@
-package com.example.sda.retrofitapp;
+package com.example.sda.retrofitapp.ui.clients;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.sda.retrofitapp.R;
 import com.example.sda.retrofitapp.model.CallActivity;
 import com.example.sda.retrofitapp.model.Client;
 import com.example.sda.retrofitapp.network.ApiClient;
@@ -16,6 +19,9 @@ import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,24 +30,24 @@ import retrofit2.Response;
  * Created by wd42 on 25.05.17.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class ClientsActivity extends AppCompatActivity {
 
-    private Button getActivitiesButton;
-    private Button getClientsButton;
+    @BindView(R.id.clients_recycler)
+    RecyclerView recyclerView;
+
     private ApiService apiService;
     private ApiClient apiClient;
     private SharedPreferencesManager sharedPreferencesManager;
-
-    RecyclerView recyclerView;
-    RelativeLayout relativeLayout;
-    RecyclerView.Adapter recyclerViewAdapter;
-    RecyclerView.LayoutManager recylerViewLayoutManager;
+    private ClientsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         init();
+
+
     }
 
     private void init() {
@@ -49,28 +55,18 @@ public class MainActivity extends AppCompatActivity {
         apiClient = new ApiClient(sharedPreferencesManager);
         apiService = apiClient.getApiService();
 
-        getActivitiesButton = (Button) findViewById(R.id.get_activity_button);
-        //recyclerListener = (AbsListView.RecyclerListener) findViewById(R.id.activity_list);
-        getClientsButton = (Button) findViewById(R.id.get_clients_button);
+        adapter = new ClientsAdapter();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(adapter);
 
 
-        getActivitiesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivities();
-            }
-        });
-        getClientsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getClients();
-            }
-        });
 
     }
+/*
 
-
-    private void getActivities() {
+    @OnClick(R.id.get_activity_button)
+     void getActivities() {
 
         apiService.getActivities()
                 .enqueue(new Callback<List<CallActivity>>() {
@@ -93,15 +89,19 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
+*/
 
-    private void getClients() {
+    @OnClick(R.id.get_clients_button)
+    void getClients() {
 
         apiService.getClients().enqueue(new Callback<List<Client>>() {
             @Override
             public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                 if (response.isSuccessful()) {
-                    List<Client> callActivities = response.body();
-                    Log.e("Clients: ", callActivities.toString());
+                    List<Client> clientsList = response.body();
+                    Log.e("Clients: ", clientsList.toString());
+
+                    adapter.setData(clientsList);
                 }
             }
 
@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 
 }

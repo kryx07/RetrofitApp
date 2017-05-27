@@ -1,38 +1,44 @@
-package com.example.sda.retrofitapp;
+package com.example.sda.retrofitapp.utils;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
-public class MyApplication extends Application {
+public class MyApplicationProvider extends Application {
 
     /*public void onCreate() {
         super.onCreate();
-        MyApplication.context = getApplicationContext();
+        MyApplicationProvider.context = getApplicationContext();
     }
 
     private static Context context;
 
     public static Context getAppContext() {
-        return MyApplication.context;
+        return MyApplicationProvider.context;
     }*/
 
 
-    public static Application getApplicationUsingReflection()  {
+    public static Application getApplication() {
         try {
             return (Application) Class.forName("android.app.ActivityThread")
                     .getMethod("currentApplication").invoke(null, (Object[]) null);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logError(e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logError(e);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            logError(e);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logError(e);
         }
 
         return null;
+    }
+
+    private static void logError(Exception e) {
+        Log.e("MyApplicationProvider: ", Arrays.toString(e.getStackTrace()));
     }
 }
