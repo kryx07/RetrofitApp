@@ -6,9 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ProgressBar;
 
 import com.example.sda.retrofitapp.R;
 import com.example.sda.retrofitapp.model.CallActivity;
@@ -34,11 +32,14 @@ public class ClientsActivity extends AppCompatActivity {
 
     @BindView(R.id.clients_recycler)
     RecyclerView recyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar spinner;
 
     private ApiService apiService;
     private ApiClient apiClient;
     private SharedPreferencesManager sharedPreferencesManager;
-    private ClientsAdapter adapter;
+    private ClientsAdapter clientsAdapter;
+    private CallActivitiesAdapter callActivitiesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +56,20 @@ public class ClientsActivity extends AppCompatActivity {
         apiClient = new ApiClient(sharedPreferencesManager);
         apiService = apiClient.getApiService();
 
-        adapter = new ClientsAdapter();
+        callActivitiesAdapter = new CallActivitiesAdapter();
+        clientsAdapter = new ClientsAdapter();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
-
+        recyclerView.setAdapter(clientsAdapter);
 
 
     }
-/*
+
 
     @OnClick(R.id.get_activity_button)
-     void getActivities() {
+    void getActivities() {
+
+        showSpinner();
 
         apiService.getActivities()
                 .enqueue(new Callback<List<CallActivity>>() {
@@ -75,6 +78,11 @@ public class ClientsActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             List<CallActivity> callActivities = response.body();
                             Log.e("CallActivities: ", callActivities.toString());
+
+                            setRecyclerAdapter(callActivitiesAdapter);
+                            callActivitiesAdapter.setData(callActivities);
+
+                            hideSpinner();
                         } else {
                             Log.e("Response unsuccessful: ", "There was a problem with your getting activities");
 
@@ -89,10 +97,11 @@ public class ClientsActivity extends AppCompatActivity {
                 });
 
     }
-*/
 
     @OnClick(R.id.get_clients_button)
     void getClients() {
+
+        showSpinner();
 
         apiService.getClients().enqueue(new Callback<List<Client>>() {
             @Override
@@ -101,7 +110,10 @@ public class ClientsActivity extends AppCompatActivity {
                     List<Client> clientsList = response.body();
                     Log.e("Clients: ", clientsList.toString());
 
-                    adapter.setData(clientsList);
+                    setRecyclerAdapter(clientsAdapter);
+                    clientsAdapter.setData(clientsList);
+
+                    hideSpinner();
                 }
             }
 
@@ -113,6 +125,18 @@ public class ClientsActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setRecyclerAdapter(RecyclerView.Adapter adapter) {
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void showSpinner() {
+        spinner.setVisibility(View.VISIBLE);
+    }
+
+    private void hideSpinner() {
+        spinner.setVisibility(View.GONE);
     }
 
 
