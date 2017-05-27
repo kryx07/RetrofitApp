@@ -1,5 +1,6 @@
 package com.example.sda.retrofitapp.network;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.example.sda.retrofitapp.BuildConfig;
@@ -23,14 +24,20 @@ public class ApiClient {
 
     private static final String BASE_URL = "http://cbm.aype.pl/CBM_API/api/";
 
-    private static Retrofit retrofit;
+    private Retrofit retrofit;
+    private  ApiService apiService;
 
+    public ApiClient(SharedPreferencesManager sharedPreferencesManager){
+        createRetrofit(sharedPreferencesManager);
+    }
 
-    private static Retrofit createRetrofit() {
+    public ApiService getApiService(){
+        return apiService;
+    }
+
+    private  void createRetrofit(final SharedPreferencesManager sharedPreferencesManager) {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-
-        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager();
 
         clientBuilder.addInterceptor(new Interceptor() {
             @Override
@@ -51,18 +58,14 @@ public class ApiClient {
         clientBuilder.addInterceptor(interceptor);
 
 
-        return new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(clientBuilder.build())
                 .build();
+
+        apiService = retrofit.create(ApiService.class);
     }
 
-    public static ApiService getService() {
-        if (retrofit == null) {
-            retrofit = createRetrofit();
-        }
-        return retrofit.create(ApiService.class);
-    }
+
 }

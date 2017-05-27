@@ -24,7 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editPassword;
     private Button submitButton;
 
-    private ApiService api;
+    private ApiService apiService;
+    private ApiClient apiClient;
 
     private SharedPreferencesManager sharedPreferencesManager;
 
@@ -43,7 +44,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void init() {
         sharedPreferencesManager = new SharedPreferencesManager();
-        api = ApiClient.getService();
+        apiClient = new ApiClient(sharedPreferencesManager);
+        apiService = apiClient.getApiService();
+
 
         editMail = (EditText) findViewById(R.id.email);
         editPassword = (EditText) findViewById(R.id.password);
@@ -60,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String email, String password) {
 
-        api.login(email, password)
+        apiService.login(email, password)
                 .enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {

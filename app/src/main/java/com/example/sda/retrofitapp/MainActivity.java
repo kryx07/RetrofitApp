@@ -2,17 +2,17 @@ package com.example.sda.retrofitapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.example.sda.retrofitapp.model.CallActivity;
 import com.example.sda.retrofitapp.model.Client;
 import com.example.sda.retrofitapp.network.ApiClient;
 import com.example.sda.retrofitapp.network.ApiService;
+import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
 
 import java.util.List;
 
@@ -28,10 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Button getActivitiesButton;
     private Button getClientsButton;
-    private ApiService api;
+    private ApiService apiService;
+    private ApiClient apiClient;
+    private SharedPreferencesManager sharedPreferencesManager;
 
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
+    RecyclerView recyclerView;
+    RelativeLayout relativeLayout;
+    RecyclerView.Adapter recyclerViewAdapter;
+    RecyclerView.LayoutManager recylerViewLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +45,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        api = ApiClient.getService();
+        sharedPreferencesManager = new SharedPreferencesManager();
+        apiClient = new ApiClient(sharedPreferencesManager);
+        apiService = apiClient.getApiService();
 
         getActivitiesButton = (Button) findViewById(R.id.get_activity_button);
         //recyclerListener = (AbsListView.RecyclerListener) findViewById(R.id.activity_list);
         getClientsButton = (Button) findViewById(R.id.get_clients_button);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         getActivitiesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getActivities() {
 
-        api.getActivities()
+        apiService.getActivities()
                 .enqueue(new Callback<List<CallActivity>>() {
                     @Override
                     public void onResponse(Call<List<CallActivity>> call, Response<List<CallActivity>> response) {
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getClients() {
 
-        api.getClients().enqueue(new Callback<List<Client>>() {
+        apiService.getClients().enqueue(new Callback<List<Client>>() {
             @Override
             public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                 if (response.isSuccessful()) {
