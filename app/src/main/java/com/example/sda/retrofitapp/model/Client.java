@@ -1,69 +1,67 @@
 package com.example.sda.retrofitapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Client {
+public class Client implements Parcelable{
 
     @SerializedName("Name")
     @Expose
     private String name;
-    @SerializedName("TaxIdentityNo")
-    @Expose
-    private String taxIdentityNo;
-    @SerializedName("Regon")
-    @Expose
-    private String regon;
     @SerializedName("City")
     @Expose
     private String city;
-    @SerializedName("Address")
-    @Expose
-    private String address;
-    @SerializedName("PostalCode")
-    @Expose
-    private String postalCode;
-    @SerializedName("PhoneNo1")
-    @Expose
-    private String phoneNo1;
-    @SerializedName("PhoneNo2")
-    @Expose
-    private String phoneNo2;
     @SerializedName("Country")
     @Expose
     private String country;
-    @SerializedName("CountryCode")
+    @SerializedName("PhoneNo1")
     @Expose
-    private Object countryCode;
-    @SerializedName("KRS")
-    @Expose
-    private String kRS;
-    @SerializedName("WWW")
-    @Expose
-    private String wWW;
-    @SerializedName("Email")
-    @Expose
-    private String email;
-    @SerializedName("ContactIds")
-    @Expose
-    private List<Object> contactIds = null;
-    @SerializedName("ContactExtIds")
-    @Expose
-    private List<Object> contactExtIds = null;
-    @SerializedName("InsertDate")
-    @Expose
-    private String insertDate;
-    @SerializedName("ModifiedDate")
-    @Expose
-    private String modifiedDate;
-    @SerializedName("ExtId")
-    @Expose
-    private String extId;
+    private String phoneNo;
     @SerializedName("Id")
     @Expose
-    private Integer id;
+    private int id;
+
+
+    protected Client(Parcel in) {
+        this.name = in.readString();
+        this.city = in.readString();
+        this.id=in.readInt();
+        this.country = in.readString();
+        this.phoneNo = in.readString();
+    }
+
+    public static final Creator<Client> CREATOR = new Creator<Client>() {
+        @Override
+        public Client createFromParcel(Parcel in) {
+            return new Client(in);
+        }
+
+        @Override
+        public Client[] newArray(int size) {
+            return new Client[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(city);
+        dest.writeString(country);
+        dest.writeString(phoneNo);
+        dest.writeInt(id);
+    }
+
 
     public String getName() {
         return name;
@@ -71,22 +69,6 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTaxIdentityNo() {
-        return taxIdentityNo;
-    }
-
-    public void setTaxIdentityNo(String taxIdentityNo) {
-        this.taxIdentityNo = taxIdentityNo;
-    }
-
-    public String getRegon() {
-        return regon;
-    }
-
-    public void setRegon(String regon) {
-        this.regon = regon;
     }
 
     public String getCity() {
@@ -97,36 +79,12 @@ public class Client {
         this.city = city;
     }
 
-    public String getAddress() {
-        return address;
+    public int getId() {
+        return id;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getPhoneNo1() {
-        return phoneNo1;
-    }
-
-    public void setPhoneNo1(String phoneNo1) {
-        this.phoneNo1 = phoneNo1;
-    }
-
-    public String getPhoneNo2() {
-        return phoneNo2;
-    }
-
-    public void setPhoneNo2(String phoneNo2) {
-        this.phoneNo2 = phoneNo2;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCountry() {
@@ -137,107 +95,19 @@ public class Client {
         this.country = country;
     }
 
-    public Object getCountryCode() {
-        return countryCode;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setCountryCode(Object countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public String getKRS() {
-        return kRS;
-    }
-
-    public void setKRS(String kRS) {
-        this.kRS = kRS;
-    }
-
-    public String getWWW() {
-        return wWW;
-    }
-
-    public void setWWW(String wWW) {
-        this.wWW = wWW;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Object> getContactIds() {
-        return contactIds;
-    }
-
-    public void setContactIds(List<Object> contactIds) {
-        this.contactIds = contactIds;
-    }
-
-    public List<Object> getContactExtIds() {
-        return contactExtIds;
-    }
-
-    public void setContactExtIds(List<Object> contactExtIds) {
-        this.contactExtIds = contactExtIds;
-    }
-
-    public String getInsertDate() {
-        return insertDate;
-    }
-
-    public void setInsertDate(String insertDate) {
-        this.insertDate = insertDate;
-    }
-
-    public String getModifiedDate() {
-        return modifiedDate;
-    }
-
-    public void setModifiedDate(String modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
-    public String getExtId() {
-        return extId;
-    }
-
-    public void setExtId(String extId) {
-        this.extId = extId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     @Override
     public String toString() {
         return "Client{" +
                 "name='" + name + '\'' +
-                ", taxIdentityNo='" + taxIdentityNo + '\'' +
-                ", regon='" + regon + '\'' +
                 ", city='" + city + '\'' +
-                ", address='" + address + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", phoneNo1='" + phoneNo1 + '\'' +
-                ", phoneNo2='" + phoneNo2 + '\'' +
-                ", country='" + country + '\'' +
-                ", countryCode=" + countryCode +
-                ", kRS='" + kRS + '\'' +
-                ", wWW='" + wWW + '\'' +
-                ", email='" + email + '\'' +
-                ", contactIds=" + contactIds +
-                ", contactExtIds=" + contactExtIds +
-                ", insertDate='" + insertDate + '\'' +
-                ", modifiedDate='" + modifiedDate + '\'' +
-                ", extId='" + extId + '\'' +
                 ", id=" + id +
                 '}';
     }

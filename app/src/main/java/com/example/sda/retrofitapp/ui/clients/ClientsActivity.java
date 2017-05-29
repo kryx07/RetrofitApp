@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.sda.retrofitapp.LoginActivity;
 import com.example.sda.retrofitapp.R;
@@ -32,7 +33,7 @@ import retrofit2.Response;
  * Created by wd42 on 25.05.17.
  */
 
-public class ClientsActivity extends AppCompatActivity {
+public class ClientsActivity extends AppCompatActivity implements ClientsAdapter.ClientClickListener {
 
     @BindView(R.id.clients_recycler)
     RecyclerView recyclerView;
@@ -70,6 +71,12 @@ public class ClientsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClientClick(Client client) {
+        // TODO: 29.05.17 open new activity
+       // Toast.makeText(getApplicationContext(), "isItWorking???" + client.getName(), Toast.LENGTH_LONG).show();
+        startClientDetailsActivity(client);
+    }
 
 
     private void init() {
@@ -78,7 +85,7 @@ public class ClientsActivity extends AppCompatActivity {
         apiService = apiClient.getApiService();
 
         callActivitiesAdapter = new CallActivitiesAdapter();
-        clientsAdapter = new ClientsAdapter();
+        clientsAdapter = new ClientsAdapter(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(clientsAdapter);
@@ -88,52 +95,19 @@ public class ClientsActivity extends AppCompatActivity {
 
     }
 
-
-  /*  @OnClick(R.id.get_activity_button)
-    void getActivities() {
-
-        showSpinner();
-
-        apiService.getActivities()
-                .enqueue(new Callback<List<CallActivity>>() {
-                    @Override
-                    public void onResponse(Call<List<CallActivity>> call, Response<List<CallActivity>> response) {
-                        if (response.isSuccessful()) {
-                            List<CallActivity> callActivities = response.body();
-                            Log.e("CallActivities: ", callActivities.toString());
-
-                            setRecyclerAdapter(callActivitiesAdapter);
-                            callActivitiesAdapter.setData(callActivities);
-
-                            hideSpinner();
-                        } else {
-                            Log.e("Response unsuccessful: ", "There was a problem with your getting activities");
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<CallActivity>> call, Throwable t) {
-                        Log.e("Response Failure: ", "There was a failure getting activities", t);
-                        Log.e("Response Failure: ", t.getStackTrace().toString());
-                    }
-                });
-
-    }*/
-
     void getClients() {
 
         final int WRONG_AUTHORIZATION_TOKEN_CODE = 401;
 
         showSpinner();
 
-        android.os.SystemClock.sleep(1500);
+        //android.os.SystemClock.sleep(1500);
 
         apiService.getClients().enqueue(new Callback<List<Client>>() {
             @Override
             public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                 if (response.isSuccessful()) {
-                    if(response.code()== WRONG_AUTHORIZATION_TOKEN_CODE){
+                    if (response.code() == WRONG_AUTHORIZATION_TOKEN_CODE) {
                         startLoginActivity();
                     }
 
@@ -169,10 +143,16 @@ public class ClientsActivity extends AppCompatActivity {
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    private void startLoginActivity(){
+    private void startLoginActivity() {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void startClientDetailsActivity(Client client) {
+        Intent intent = new Intent(getApplicationContext(), ClientDetailsActivity.class);
+        intent.putExtra(getString(R.string.client_parcelable_key), client);
+        startActivity(intent);
     }
 
 

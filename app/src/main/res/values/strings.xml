@@ -15,4 +15,6 @@
 
     <string name="toast_login_error">Connection Error</string>
     <string name="toast_request_error">There was a problem getting your request</string>
+    <string name="update_client_details">Update</string>
+    <string name="client_parcelable_key">client</string>
 </resources>
