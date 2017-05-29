@@ -1,5 +1,6 @@
 package com.example.sda.retrofitapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private ApiService apiService;
 
     private SharedPreferencesManager sharedPreferencesManager;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String email, String password) {
 
+        progressDialog= ProgressDialog.show(this, "Login",  "Logging In...." );
+
         apiService.login(email, password)
                 .enqueue(new Callback<LoginResponse>() {
                     @Override
@@ -70,8 +74,10 @@ public class LoginActivity extends AppCompatActivity {
                             sharedPreferencesManager.writeAccessToken(accessToken);
                             Log.e("Read access token", sharedPreferencesManager.readAccessToken());
 
+                            progressDialog.hide();
+
                             //start new activity
-                            openMainActivity();
+                            startMainActivity();
 
                         } else {
                             Log.e("Access token", "Login error");
@@ -89,11 +95,11 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void openMainActivity() {
+    private void startMainActivity() {
         Intent intent = new Intent(getApplicationContext(), ClientsActivity.class);
         //intent.putExtra("dupa");
         startActivity(intent);
-        finish();
+        //finish();
     }
 
 
