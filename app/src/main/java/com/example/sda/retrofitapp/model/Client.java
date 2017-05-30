@@ -101,6 +101,10 @@ public class Client implements Parcelable{
         this.phoneNo = phoneNo;
     }
 
+    public void setExternalKeys(List<ExternalKey> externalKeys) {
+        this.externalKeys = externalKeys;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
@@ -109,9 +113,7 @@ public class Client implements Parcelable{
                 ", country='" + country + '\'' +
                 ", phoneNo='" + phoneNo + '\'' +
                 ", id=" + id +
+                ", externalKeys=" + externalKeys +
                 '}';
     }
-
-
-
 }

@@ -17,4 +17,7 @@
     <string name="toast_request_error">There was a problem getting your request</string>
     <string name="update_client_details">Update</string>
     <string name="client_parcelable_key">client</string>
+
+    <string name="menu_title_clients_add">Add</string>
+    <string name="menu_title_client_delete">Delete</string>
 </resources>

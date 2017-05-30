@@ -4,15 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.sda.retrofitapp.LoginActivity;
 import com.example.sda.retrofitapp.R;
 import com.example.sda.retrofitapp.model.Client;
+import com.example.sda.retrofitapp.model.ExternalKey;
 import com.example.sda.retrofitapp.network.ApiClient;
 import com.example.sda.retrofitapp.network.ApiService;
-import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,14 +65,12 @@ public class ClientDetailsActivity extends AppCompatActivity {
     private void init() {
         Intent intent = getIntent();
         client = intent.getExtras().getParcelable(getString(R.string.client_parcelable_key));
-        logDebug(client.toString());
         if (client != null) {
+            logDebug(client.toString());
             clientName.setText(client.getName());
             clientCountry.setText(client.getCountry());
             clientPhoneNumber.setText(client.getPhoneNo());
             clientCity.setText(client.getCity());
-        } else {
-            finish();
         }
 
         apiService = new ApiClient().getApiService();
@@ -73,15 +78,109 @@ public class ClientDetailsActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.details_update)
-    public void updateData() {
+    public void onSaveClick() {
+        if (client == null) {
+            addClient();
+        } else {
+            updateClient();
+        }
+    }
 
-        Client updatedClient = client;
-        updatedClient.setName(clientName.getText().toString());
-        updatedClient.setCity(clientCity.getText().toString());
-        updatedClient.setCountry(clientCountry.getText().toString());
-        updatedClient.setPhoneNo(clientPhoneNumber.getText().toString());
-
+    private void readNewClient() {
+        if (client == null) {
+            client = new Client();
+        }
+        client.setName(clientName.getText().toString());
+        client.setCity(clientCity.getText().toString());
+        client.setCountry(clientCountry.getText().toString());
+        client.setPhoneNo(clientPhoneNumber.getText().toString());
         logDebug(client.toString());
+    }
+
+    private void addClient() {
+        readNewClient();
+
+        client.setId(generateId());
+        //client.setExternalKeys(new ArrayList<ExternalKey>());
+        logDebug(client.toString());
+        //Workaround
+        List<Client> clientList = Arrays.asList(client);
+
+        apiService.addClient(clientList).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    if (response.code() == R.integer.WRONG_AUTHORIZATION_TOKEN) {
+                        startLoginActivity();
+                    }
+                    logDebug("Successfully added client: " + client);
+                    startClientsActivity();
+
+                } else {
+                    logDebug("Client creation was not successful");
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                makeLongToast("Error");
+                logDebug("There was an error updating client: " + client);
+            }
+
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (client != null) {
+            getMenuInflater().inflate(R.menu.menu_client_detail, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_client_detail_delete) {
+            deleteClient();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteClient() {
+
+
+        apiService.deleteClient(client).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    if (response.code() == R.integer.WRONG_AUTHORIZATION_TOKEN) {
+                        startLoginActivity();
+                    }
+                    logDebug("Successfully deleted client: " + client);
+                    startClientsActivity();
+
+                } else {
+                    logDebug("Delete was  unsuccessful");
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                makeLongToast("Error");
+                logDebug("There was an error updating client: " + client);
+            }
+
+        });
+    }
+
+
+    private void updateClient() {
+        readNewClient();
 
         apiService.updateClient(client).enqueue(new Callback<Void>() {
             @Override
@@ -94,7 +193,7 @@ public class ClientDetailsActivity extends AppCompatActivity {
                     startClientsActivity();
 
                 } else {
-                    logDebug("Update was not successful");
+                    logDebug("Update was unsuccessful");
 
                 }
 
@@ -124,6 +223,10 @@ public class ClientDetailsActivity extends AppCompatActivity {
 
     private void makeLongToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private int generateId() {
+        return new Random(12).nextInt();
     }
 
 }

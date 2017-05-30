@@ -2,11 +2,14 @@ package com.example.sda.retrofitapp.ui.clients;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,8 +36,6 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
 
     @BindView(R.id.clients_recycler)
     RecyclerView recyclerView;
-    /*@BindView(R.id.pbHeaderProgress)
-    ProgressBar spinner;*/
     @BindView(R.id.activity_main_swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -61,11 +62,24 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
         startLoginActivity();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_clients, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_clients_add) {
+            startClientDetailsActivity(null);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+        @Override
     public void onClientClick(Client client) {
         // TODO: 29.05.17 open new activity
-       // Toast.makeText(getApplicationContext(), "isItWorking???" + client.getName(), Toast.LENGTH_LONG).show();
         startClientDetailsActivity(client);
     }
 
@@ -97,7 +111,7 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
                     }
 
                     List<Client> clientsList = response.body();
-                    Log.e("Clients: ", clientsList.toString());
+                    logDebug("Clients list: " + clientsList.toString());
 
                     setRecyclerAdapter(clientsAdapter);
                     clientsAdapter.setData(clientsList);
@@ -108,8 +122,8 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
 
             @Override
             public void onFailure(Call<List<Client>> call, Throwable t) {
-                Log.e("Response Failure: ", "There was a failure getting activities", t);
-                Log.e("Response Failure: ", Arrays.toString(t.getStackTrace()));
+                logDebug("Response Failure: " + "There was a failure getting activities");
+                logDebug("Response Failure: " + Arrays.toString(t.getStackTrace()));
             }
         });
     }
@@ -132,10 +146,19 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
         finish();
     }
 
-    private void startClientDetailsActivity(Client client) {
+    private void startClientDetailsActivity(@Nullable Client client) {
         Intent intent = new Intent(getApplicationContext(), ClientDetailsActivity.class);
         intent.putExtra(getString(R.string.client_parcelable_key), client);
         startActivity(intent);
+    }
+
+    private void logDebug(String string) {
+        Log.e(getClass().getSimpleName(), string);
+
+    }
+
+    private void makeLongToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
 
