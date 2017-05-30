@@ -25,15 +25,16 @@ public class ApiClient {
     private static final String BASE_URL = "http://cbm.aype.pl/CBM_API/api/";
     private ApiService apiService;
 
-    public ApiClient(SharedPreferencesManager sharedPreferencesManager) {
-        createRetrofit(sharedPreferencesManager);
+    public ApiClient() {
+        createRetrofit();
     }
 
     public ApiService getApiService() {
         return apiService;
     }
 
-    private void createRetrofit(final SharedPreferencesManager sharedPreferencesManager) {
+    private void createRetrofit() {
+        final SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager();
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 

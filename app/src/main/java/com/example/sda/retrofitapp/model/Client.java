@@ -3,50 +3,24 @@ package com.example.sda.retrofitapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class Client implements Parcelable{
 
     @SerializedName("Name")
-    @Expose
     private String name;
     @SerializedName("City")
-    @Expose
     private String city;
     @SerializedName("Country")
-    @Expose
     private String country;
     @SerializedName("PhoneNo1")
-    @Expose
     private String phoneNo;
     @SerializedName("Id")
-    @Expose
     private int id;
-
-
-    protected Client(Parcel in) {
-        this.name = in.readString();
-        this.city = in.readString();
-        this.id=in.readInt();
-        this.country = in.readString();
-        this.phoneNo = in.readString();
-    }
-
-    public static final Creator<Client> CREATOR = new Creator<Client>() {
-        @Override
-        public Client createFromParcel(Parcel in) {
-            return new Client(in);
-        }
-
-        @Override
-        public Client[] newArray(int size) {
-            return new Client[size];
-        }
-    };
+    @SerializedName("ExternalKeys")
+    private List<ExternalKey> externalKeys;
 
     @Override
     public int describeContents() {
@@ -55,13 +29,37 @@ public class Client implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(city);
-        dest.writeString(country);
-        dest.writeString(phoneNo);
-        dest.writeInt(id);
+        dest.writeString(this.name);
+        dest.writeString(this.city);
+        dest.writeString(this.country);
+        dest.writeString(this.phoneNo);
+        dest.writeInt(this.id);
+        dest.writeTypedList(this.externalKeys);
     }
 
+    public Client() {
+    }
+
+    protected Client(Parcel in) {
+        this.name = in.readString();
+        this.city = in.readString();
+        this.country = in.readString();
+        this.phoneNo = in.readString();
+        this.id = in.readInt();
+        this.externalKeys = in.createTypedArrayList(ExternalKey.CREATOR);
+    }
+
+    public static final Creator<Client> CREATOR = new Creator<Client>() {
+        @Override
+        public Client createFromParcel(Parcel source) {
+            return new Client(source);
+        }
+
+        @Override
+        public Client[] newArray(int size) {
+            return new Client[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -108,7 +106,12 @@ public class Client implements Parcelable{
         return "Client{" +
                 "name='" + name + '\'' +
                 ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
                 ", id=" + id +
                 '}';
     }
+
+
+
 }

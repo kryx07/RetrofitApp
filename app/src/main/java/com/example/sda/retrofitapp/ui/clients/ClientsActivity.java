@@ -29,10 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by wd42 on 25.05.17.
- */
-
 public class ClientsActivity extends AppCompatActivity implements ClientsAdapter.ClientClickListener {
 
     @BindView(R.id.clients_recycler)
@@ -43,10 +39,7 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
     SwipeRefreshLayout swipeRefreshLayout;
 
     private ApiService apiService;
-    private ApiClient apiClient;
-    private SharedPreferencesManager sharedPreferencesManager;
     private ClientsAdapter clientsAdapter;
-    private CallActivitiesAdapter callActivitiesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +54,6 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
                 getClients();
             }
         });
-
-
     }
 
     @Override
@@ -80,24 +71,18 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
 
 
     private void init() {
-        sharedPreferencesManager = new SharedPreferencesManager();
-        apiClient = new ApiClient(sharedPreferencesManager);
-        apiService = apiClient.getApiService();
+        apiService = new ApiClient().getApiService();
 
-        callActivitiesAdapter = new CallActivitiesAdapter();
         clientsAdapter = new ClientsAdapter(this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(clientsAdapter);
 
         getClients();
-
-
     }
 
     void getClients() {
 
-        final int WRONG_AUTHORIZATION_TOKEN_CODE = 401;
 
         showSpinner();
 
@@ -107,7 +92,7 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
             @Override
             public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
                 if (response.isSuccessful()) {
-                    if (response.code() == WRONG_AUTHORIZATION_TOKEN_CODE) {
+                    if (response.code() == R.integer.WRONG_AUTHORIZATION_TOKEN) {
                         startLoginActivity();
                     }
 
@@ -127,8 +112,6 @@ public class ClientsActivity extends AppCompatActivity implements ClientsAdapter
                 Log.e("Response Failure: ", Arrays.toString(t.getStackTrace()));
             }
         });
-
-
     }
 
     private void setRecyclerAdapter(RecyclerView.Adapter adapter) {

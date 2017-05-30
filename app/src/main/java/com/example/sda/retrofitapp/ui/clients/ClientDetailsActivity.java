@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.sda.retrofitapp.LoginActivity;
 import com.example.sda.retrofitapp.R;
@@ -32,8 +33,6 @@ public class ClientDetailsActivity extends AppCompatActivity {
     EditText clientPhoneNumber;
 
     private ApiService apiService;
-    private ApiClient apiClient;
-    private SharedPreferencesManager sharedPreferencesManager;
     private Client client;
 
     @Override
@@ -42,7 +41,6 @@ public class ClientDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_client_detail);
         ButterKnife.bind(this);
         init();
-
     }
 
     @Override
@@ -57,43 +55,57 @@ public class ClientDetailsActivity extends AppCompatActivity {
     }
 
 
-
-
     private void init() {
         Intent intent = getIntent();
         client = intent.getExtras().getParcelable(getString(R.string.client_parcelable_key));
+        logDebug(client.toString());
         if (client != null) {
             clientName.setText(client.getName());
             clientCountry.setText(client.getCountry());
             clientPhoneNumber.setText(client.getPhoneNo());
             clientCity.setText(client.getCity());
+        } else {
+            finish();
         }
 
-        sharedPreferencesManager = new SharedPreferencesManager();
-        apiClient = new ApiClient(sharedPreferencesManager);
-        apiService = apiClient.getApiService();
+        apiService = new ApiClient().getApiService();
 
     }
 
     @OnClick(R.id.details_update)
-    public void updateData(){
+    public void updateData() {
+
         Client updatedClient = client;
         updatedClient.setName(clientName.getText().toString());
         updatedClient.setCity(clientCity.getText().toString());
         updatedClient.setCountry(clientCountry.getText().toString());
-        updatedClient.setPhoneNo(clientCountry.getText().toString());
+        updatedClient.setPhoneNo(clientPhoneNumber.getText().toString());
+
+        logDebug(client.toString());
 
         apiService.updateClient(client).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.e("Updated??? ", String.valueOf(response.isSuccessful()));
-                startClientsActivity();
+                if (response.isSuccessful()) {
+                    if (response.code() == R.integer.WRONG_AUTHORIZATION_TOKEN) {
+                        startLoginActivity();
+                    }
+                    logDebug("Successfully updated client: " + client);
+                    startClientsActivity();
+
+                } else {
+                    logDebug("Update was not successful");
+
+                }
+
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("Updated??? ", "dupa");
+                makeLongToast("Error");
+                logDebug("There was an error updating client: " + client);
             }
+
         });
 
 
@@ -105,5 +117,13 @@ public class ClientDetailsActivity extends AppCompatActivity {
         finish();
     }
 
+    private void logDebug(String string) {
+        Log.e(getClass().getSimpleName(), string);
+
+    }
+
+    private void makeLongToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
 }

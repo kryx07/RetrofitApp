@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void init() {
         sharedPreferencesManager = new SharedPreferencesManager();
-        apiService = new ApiClient(sharedPreferencesManager).getApiService();
+        apiService = new ApiClient().getApiService();
     }
 
     private void login(String email, String password) {
@@ -80,8 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                             startMainActivity();
 
                         } else {
-                            Log.e("Access token", "Login error");
-                            Toast.makeText(getApplicationContext(), getString(R.string.toast_request_error), Toast.LENGTH_LONG).show();
+                            logDebug("Login response not successful");
+                            makeLongToast(getString(R.string.toast_request_error));
                         }
 
                     }
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
                         // TODO: 24.05.17 Handle failure
-                        Log.e("Login Error", "Something's wrong with loging in!");
+                        logDebug("Login Error: something's wrong with logging in");
                         Toast.makeText(getApplicationContext(), getString(R.string.toast_login_error), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -102,5 +102,14 @@ public class LoginActivity extends AppCompatActivity {
         //finish();
     }
 
+
+    private void logDebug(String string) {
+        Log.e(getClass().getSimpleName(), string);
+
+    }
+
+    private void makeLongToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
 }
