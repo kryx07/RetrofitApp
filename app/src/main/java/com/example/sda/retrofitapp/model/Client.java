@@ -19,7 +19,7 @@ public class Client implements Parcelable{
     private String phoneNo;
     @SerializedName("Id")
     private int id;
-    @SerializedName("ExternalKeys")//test
+    @SerializedName("ExternalKeys")
     private List<ExternalKey> externalKeys;
 
     @Override

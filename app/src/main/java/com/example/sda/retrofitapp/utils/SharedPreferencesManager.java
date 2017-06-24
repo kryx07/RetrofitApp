@@ -18,7 +18,7 @@ public class SharedPreferencesManager {
     private SharedPreferences sharedPreferences;
 
     public SharedPreferencesManager() {
-        this.context = MyApplicationProvider.getApplication();
+        this.context = MyApplication.getApplication();
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.shared_prefs), Context.MODE_PRIVATE);
         editor = context.getSharedPreferences(context.getString(R.string.shared_prefs), 0).edit();
     }

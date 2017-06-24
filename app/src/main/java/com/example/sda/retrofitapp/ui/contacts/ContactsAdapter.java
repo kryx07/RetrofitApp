@@ -1,4 +1,4 @@
-package com.example.sda.retrofitapp.ui.clients;
+package com.example.sda.retrofitapp.ui.contacts;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.sda.retrofitapp.R;
-import com.example.sda.retrofitapp.model.Client;
+import com.example.sda.retrofitapp.model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ClientsHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ClientsHolder> {
 
 
     public interface ClientClickListener {
@@ -25,18 +25,18 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ClientsH
          *
          * @param client Client to be passed .
          */
-        void onClientClick(Client client);
+        void onClientClick(Contact client);
     }
 
-    public ClientsAdapter(ClientClickListener clientClickListener) {
+    public ContactsAdapter(ClientClickListener clientClickListener) {
         this.clientClickListener = clientClickListener;
     }
 
     private ClientClickListener clientClickListener;
 
-    private List<Client> clientsList = new ArrayList<>();
+    private List<Contact> clientsList = new ArrayList<>();
 
-    public void setData(List<Client> clientList) {
+    public void setData(List<Contact> clientList) {
         this.clientsList.clear();
         this.clientsList.addAll(clientList);
         notifyDataSetChanged();
@@ -53,7 +53,7 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ClientsH
 
     @Override
     public void onBindViewHolder(final ClientsHolder holder, final int position) {
-        holder.setClient(clientsList.get(position));
+        holder.setContact(clientsList.get(position));
     }
 
     @Override
@@ -66,24 +66,24 @@ public class ClientsAdapter extends RecyclerView.Adapter<ClientsAdapter.ClientsH
         @BindView(R.id.client_name)
         TextView clientName;
 
-        private Client client;
+        private Contact contact;
 
-        public ClientsHolder(View itemView) {
+        ClientsHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clientClickListener.onClientClick(client);
+                    clientClickListener.onClientClick(contact);
                 }
             });
         }
 
 
-        public void setClient(Client client) {
-            this.client=client;
-            clientName.setText(client.getName());
+        public void setContact(Contact contact) {
+            this.contact = contact;
+            clientName.setText(contact.getLastName());
         }
 
     }

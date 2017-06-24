@@ -7,19 +7,36 @@ import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-public class MyApplicationProvider extends Application {
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
+public class MyApplication extends Application {
+    private static MyApplication myApplication;
 
     /*public void onCreate() {
         super.onCreate();
-        MyApplicationProvider.context = getApplicationContext();
+        MyApplication.context = getApplicationContext();
     }
 
     private static Context context;
 
     public static Context getAppContext() {
-        return MyApplicationProvider.context;
+        return MyApplication.context;
     }*/
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Realm.init(this);
+        //RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext()).setModules(new SimpleRealmModule()).build();
+
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
+        Realm.setDefaultConfiguration(config);
+    }
+
+    public static MyApplication getInstance() {
+        return myApplication;
+    }
 
     public static Application getApplication() {
         try {
@@ -38,7 +55,11 @@ public class MyApplicationProvider extends Application {
         return null;
     }
 
+    public static Context getContext() {
+        return getApplication().getApplicationContext();
+    }
+
     private static void logError(Exception e) {
-        Log.e("MyApplicationProvider: ", Arrays.toString(e.getStackTrace()));
+        Log.e("MyApplication: ", Arrays.toString(e.getStackTrace()));
     }
 }

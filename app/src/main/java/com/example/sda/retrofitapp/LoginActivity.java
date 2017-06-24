@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.sda.retrofitapp.model.LoginResponse;
 import com.example.sda.retrofitapp.network.ApiClient;
 import com.example.sda.retrofitapp.network.ApiService;
-import com.example.sda.retrofitapp.ui.clients.ClientsActivity;
+import com.example.sda.retrofitapp.ui.contacts.ContactsActivity;
 import com.example.sda.retrofitapp.utils.SharedPreferencesManager;
 
 import butterknife.BindView;
@@ -51,8 +51,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.submit_button)
-    public void onSubmitClick(){
+    public void onSubmitClick() {
         login(editMail.getText().toString(), editPassword.getText().toString());
+
+        /*Realm realm = Realm.getDefaultInstance();
+        apiService.getContacts().enqueue(new Callback<List<Contact>>() {
+            @Override
+            public void onResponse(Call<List<Contact>> call, Response<List<Contact>> response) {
+                if (response.isSuccessful()) {
+                    List<Contact> contactList = response.body();
+                    logDebug(contactList.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Contact>> call, Throwable t) {
+
+            }
+        });*/
     }
 
     private void init() {
@@ -62,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String email, String password) {
 
-        progressDialog= ProgressDialog.show(this, "Login",  "Logging In...." );
+        progressDialog = ProgressDialog.show(this, "Login", "Logging In....");
 
         apiService.login(email, password)
                 .enqueue(new Callback<LoginResponse>() {
@@ -96,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(getApplicationContext(), ClientsActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ContactsActivity.class);
         //intent.putExtra("dupa");
         startActivity(intent);
         //finish();
@@ -108,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void makeLongToast(String message){
+    private void makeLongToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
