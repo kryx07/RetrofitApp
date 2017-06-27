@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,12 +25,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    @BindView(R.id.email_text)
-    EditText editMail;
-    @BindView(R.id.password_text)
-    EditText editPassword;
-    @BindView(R.id.submit_button)
-    Button submitButton;
+    @BindView(R.id.email_text)    EditText editMail;
+    @BindView(R.id.password_text)    EditText editPassword;
+    @BindView(R.id.submit_button)    Button submitButton;
 
     private ApiService apiService;
 
@@ -42,6 +40,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         init();
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSubmitClick();
+            }
+        });
     }
 
     @Override
@@ -50,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.submit_button)
+    //@OnClick(R.id.submit_button)
     public void onSubmitClick() {
         login(editMail.getText().toString(), editPassword.getText().toString());
 

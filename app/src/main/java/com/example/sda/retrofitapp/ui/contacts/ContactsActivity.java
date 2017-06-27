@@ -89,7 +89,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsAdapt
 
         apiService = new ApiClient().getApiService();
 
-        contactsAdapter = new RealmContactsAdapter(realm.where(Contact.class).beginsWith("lastName", "Info").findAll(), true);
+        contactsAdapter = new RealmContactsAdapter(realm.where(Contact.class).findAll(), true);
         recyclerView.setAdapter(contactsAdapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
