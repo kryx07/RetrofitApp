@@ -50,5 +50,8 @@ import io.realm.annotations.PrimaryKey;
         this.phoneNo1 = phoneNo1;
     }
 
+    public void dupa(){
+        System.out.print("dupa");
+    }
 
 }
